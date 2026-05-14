@@ -1,24 +1,22 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { ThemeToggle } from '../../atoms/theme-toggle';
 
 const NAV_LINKS = [
   { label: 'Marketplace', href: '/marketplace' },
-  { label: 'Dashboard',   href: '/dashboard'   },
-  { label: 'Messages',    href: '/messages'     },
-  { label: 'About',       href: '/about'        },
+  { label: 'How It Works', href: '/#how-it-works' },
+  { label: 'For Suppliers', href: '/sell' },
 ];
 
 export function Navbar() {
-  const [open, setOpen]         = useState(false);
+  const [open, setOpen]       = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const fn = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', fn, { passive: true });
+    return () => window.removeEventListener('scroll', fn);
   }, []);
 
   useEffect(() => {
@@ -30,78 +28,94 @@ export function Navbar() {
 
   return (
     <>
-      <nav className={`sticky top-0 z-50 flex items-center justify-between px-4 sm:px-6 h-16 bg-white/95 dark:bg-gray-950/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800 transition-shadow ${scrolled ? 'shadow-md' : 'shadow-sm'}`}>
+      <nav className={`sticky top-0 z-50 transition-all duration-200 ${
+        scrolled
+          ? 'bg-white/95 backdrop-blur-md border-b border-zinc-200 shadow-sm'
+          : 'bg-white border-b border-zinc-100'
+      }`}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
 
-        {/* Brand */}
-        <Link href="/" onClick={close} className="flex items-center gap-2 text-xl font-extrabold text-gray-900 dark:text-white tracking-tight shrink-0">
-          <span className="text-2xl">🌍</span>
-          OyaShip
-        </Link>
-
-        {/* Desktop links */}
-        <ul className="hidden md:flex items-center gap-0.5 list-none m-0 p-0">
-          {NAV_LINKS.map(({ label, href }) => (
-            <li key={href}>
-              <Link href={href} className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${router.pathname === href ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white'}`}>
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-
-        {/* Desktop right */}
-        <div className="hidden md:flex items-center gap-3">
-          <ThemeToggle />
-          <Link href="/marketplace" className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-sm font-semibold rounded-lg transition-all hover:-translate-y-px shadow-sm">
-            Browse Suppliers
+          {/* Brand */}
+          <Link href="/" onClick={close} className="flex items-center gap-2 shrink-0">
+            <div className="w-6 h-6 rounded-md bg-emerald-600 flex items-center justify-center">
+              <span className="text-[11px] font-black text-white">O</span>
+            </div>
+            <span className="text-sm font-bold text-zinc-900 tracking-tight">OyaShip</span>
           </Link>
-        </div>
 
-        {/* Mobile right */}
-        <div className="flex md:hidden items-center gap-1">
-          <ThemeToggle />
-          <button
-            className="relative w-10 h-10 flex flex-col items-center justify-center gap-[5px] rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-label={open ? 'Close menu' : 'Open menu'}
-          >
-            <span className={`block w-5 h-0.5 bg-gray-900 dark:bg-white rounded-full transition-all duration-300 ${open ? 'rotate-45 translate-y-[7px]' : ''}`} />
-            <span className={`block w-5 h-0.5 bg-gray-900 dark:bg-white rounded-full transition-all duration-300 ${open ? 'opacity-0 scale-x-0' : ''}`} />
-            <span className={`block w-5 h-0.5 bg-gray-900 dark:bg-white rounded-full transition-all duration-300 ${open ? '-rotate-45 -translate-y-[7px]' : ''}`} />
-          </button>
-        </div>
-      </nav>
-
-      {/* Backdrop */}
-      <div
-        onClick={close}
-        aria-hidden="true"
-        className={`fixed inset-0 z-40 bg-black/30 backdrop-blur-sm md:hidden transition-opacity duration-300 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-      />
-
-      {/* Mobile drawer */}
-      <div className={`fixed top-16 left-0 right-0 z-50 md:hidden bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 shadow-xl transition-all duration-300 ease-in-out ${open ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
-        <div className="px-4 py-4">
-          <ul className="list-none m-0 p-0 flex flex-col gap-1">
+          {/* Desktop links */}
+          <ul className="hidden md:flex items-center gap-0.5 list-none m-0 p-0">
             {NAV_LINKS.map(({ label, href }) => (
               <li key={href}>
                 <Link
                   href={href}
-                  onClick={close}
-                  className={`flex items-center px-4 py-3 rounded-xl text-base font-medium transition-colors min-h-[48px] ${router.pathname === href ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
+                  className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                    router.pathname === href
+                      ? 'text-zinc-900 bg-zinc-100'
+                      : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50'
+                  }`}
                 >
                   {label}
                 </Link>
               </li>
             ))}
           </ul>
-          <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-800 flex flex-col gap-2">
-            <Link href="/marketplace" onClick={close} className="flex items-center justify-center w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-colors min-h-[48px]">
-              Browse Suppliers →
+
+          {/* Desktop right */}
+          <div className="hidden md:flex items-center gap-3">
+            <Link
+              href="/login"
+              className="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors px-2"
+            >
+              Sign in
             </Link>
-            <Link href="/sell" onClick={close} className="flex items-center justify-center w-full py-3.5 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-xl transition-colors min-h-[48px]">
-              List Your Products
+            <Link
+              href="/marketplace"
+              className="px-4 py-1.5 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-md transition-colors"
+            >
+              Get Started
+            </Link>
+          </div>
+
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setOpen(v => !v)}
+            className="flex md:hidden w-8 h-8 items-center justify-center flex-col gap-[5px] rounded-md hover:bg-zinc-100 transition-colors"
+            aria-label={open ? 'Close menu' : 'Open menu'}
+          >
+            <span className={`block w-4 h-[1.5px] bg-zinc-900 rounded transition-all duration-200 ${open ? 'rotate-45 translate-y-[6.5px]' : ''}`} />
+            <span className={`block w-4 h-[1.5px] bg-zinc-900 rounded transition-all duration-200 ${open ? 'opacity-0' : ''}`} />
+            <span className={`block w-4 h-[1.5px] bg-zinc-900 rounded transition-all duration-200 ${open ? '-rotate-45 -translate-y-[6.5px]' : ''}`} />
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile overlay */}
+      <div
+        onClick={close}
+        className={`fixed inset-0 z-40 bg-black/20 md:hidden transition-opacity duration-200 ${open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+      />
+
+      {/* Mobile drawer */}
+      <div className={`fixed top-14 left-0 right-0 z-50 md:hidden bg-white border-b border-zinc-200 shadow-lg transition-all duration-200 ${open ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-1 pointer-events-none'}`}>
+        <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
+          {NAV_LINKS.map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={close}
+              className="flex items-center px-3 py-2.5 rounded-md text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-colors min-h-[44px]"
+            >
+              {label}
+            </Link>
+          ))}
+          <div className="pt-3 border-t border-zinc-100 flex flex-col gap-2 mt-1">
+            <Link
+              href="/marketplace"
+              onClick={close}
+              className="w-full py-2.5 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-md text-center transition-colors min-h-[44px] flex items-center justify-center"
+            >
+              Get Started
             </Link>
           </div>
         </div>
