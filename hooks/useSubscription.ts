@@ -12,7 +12,12 @@ export function useSubscription(
   _onEvent: (event: unknown) => void,
   _pollInterval = 5000
 ) {
+  // Stabilise the callback so callers can safely pass inline functions without
+  // triggering the effect on every render.
+  const onEventRef = React.useRef(_onEvent);
+  React.useEffect(() => { onEventRef.current = _onEvent });
+
   React.useEffect(() => {
     // TODO: implement Soroban event polling via @stellar/stellar-sdk
-  }, [_contractId, _topic, _onEvent, _pollInterval])
+  }, [_contractId, _topic, _pollInterval])
 }
