@@ -82,6 +82,8 @@ export function Navbar() {
             onClick={() => setOpen(v => !v)}
             className="flex md:hidden w-8 h-8 items-center justify-center flex-col gap-[5px] rounded-md hover:bg-zinc-100 transition-colors"
             aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-expanded={open}
+            aria-controls="mobile-nav-drawer"
           >
             <span className={`block w-4 h-[1.5px] bg-zinc-900 rounded transition-all duration-200 ${open ? 'rotate-45 translate-y-[6.5px]' : ''}`} />
             <span className={`block w-4 h-[1.5px] bg-zinc-900 rounded transition-all duration-200 ${open ? 'opacity-0' : ''}`} />
@@ -97,7 +99,10 @@ export function Navbar() {
       />
 
       {/* Mobile drawer */}
-      <div className={`fixed top-14 left-0 right-0 z-50 md:hidden bg-white border-b border-zinc-200 shadow-lg transition-all duration-200 ${open ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-1 pointer-events-none'}`}>
+      <div
+        id="mobile-nav-drawer"
+        className={`fixed top-14 left-0 right-0 z-50 md:hidden bg-white border-b border-zinc-200 shadow-lg transition-all duration-200 ${open ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 -translate-y-1 pointer-events-none'}`}
+      >
         <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
           {NAV_LINKS.map(({ label, href }) => (
             <Link
