@@ -12,8 +12,9 @@ export function AmountInput({ placeHolder, setAmount, input, setInput }: InputPr
   const handleChange = (event: {
     target: { name: string; value: string }
   }): void => {
-    setAmount(parseInt(event.target.value))
-    setInput(event.target.value)
+    const raw = event.target.value;
+    setAmount(raw === '' ? undefined : parseInt(raw, 10));
+    setInput(raw);
   }
 
   return (
