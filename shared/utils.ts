@@ -50,6 +50,7 @@ const percentage = (
   divider: BigInt,
   decimals = 7
 ): number => {
+  if (divider.valueOf() === 0n) return 0;
   return (Number(value.valueOf() / (10n ** BigInt(decimals))) /
       Number(divider.valueOf() / (10n ** BigInt(decimals)))
     ) * 100
